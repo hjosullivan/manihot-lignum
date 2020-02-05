@@ -1,0 +1,155 @@
+\section{Point}
+
+The \tt Point \rm describes a point in a three dimensional space using
+the  right handed  coordinate system  with the  positive  direction of
+$z$-axis pointing upwards, the positive direction of $x$-axis pointing
+south  and the  positive  $y$-axis pointing  east.   The right  handed
+coordinate system has a property that an ordinary screw pointed in the
+direction of positive $z$-axis  would advance if the positive $x$-axis
+is rotated towards positive $y$-axis.
+
+\subsection{The Class Declaration of Point}
+\verbinput{../include/Point.h}
+
+\subsection{Public Methods}
+
+\subsubsection{Point}
+The overloaded constructor for the class. 
+\begin{description}
+  \item[Signature 1] Point(double x = 0.0, double y = 0.0, double z = 0.0).
+  \begin{description}
+  \item[Arguments] to the method.
+   \begin{description}
+      \item[x, y, z] The $x$, $y$ and $z$ coordinates, 
+                     default point is at (0,0,0).
+   \end{description}
+  \item[Returns] Nothing.
+  \end{description}
+  \item[Signature 2] Point(const Point\& p).
+   \begin{description}
+  \item[Arguments] to the method.
+   \begin{description}
+      \item[p] A point in 3D space.
+   \end{description}
+  \item[Returns] Nothing.
+  \end{description}
+\end{description}
+
+
+\subsubsection{getX}
+Query the $x$-coordinate.
+\begin{description}
+  \item[Signature] double getX()const
+  \item[Returns] The $x$-coordinate.
+\end{description}
+
+\subsubsection{getY}
+Query the $y$-coordinate. 
+\begin{description}
+  \item[Signature] double getY()const.
+  \item[Returns] The $y$-coordinate.
+\end{description}
+
+\subsubsection{getZ}
+Query the $z$-coordinate.
+\begin{description}
+  \item[Signature] double getZ()const.
+  \item[Returns] The $z$-coordinate.
+\end{description}
+
+\subsubsection{setX}
+Change the $x$-coordinate. 
+\begin{description}
+  \item[Signature] Point\& setX(const double x).
+  \item[Returns] The point itself.
+\end{description}
+
+\subsubsection{setY}
+Change the $y$-coordinate.
+\begin{description}
+   \item[Signature] Point\& setY(const double x).
+  \item[Returns] The point itself.
+\end{description}
+
+\subsubsection{setZ}
+Change the $z$-coordinate.
+\begin{description}
+  \item[Signature] Point\& setZ(const double x).
+  \item[Returns] The point itself.
+\end{description}
+
+\subsection{Functions and Operators on Point}
+
+\subsubsection{operator+}
+Add two points.
+ 
+\begin{description}
+  \item[Signature] friend Point operator+(const Point\& p1,const
+  Point\& p2).
+  \item[Arguments] to the overloaded '+' operator.
+    \begin{description}
+      \item[p1, p2] The two points to be added. 
+    \end{description}
+  \item[Returns] The new point.
+\end{description}
+
+\subsubsection{operator-}
+Subtract two points.
+\begin{description}
+  \item[Signature] friend Point operator-(const Point\& p1,const
+  Point\& p2).
+  \item[Arguments] to the overloaded '-' operator.
+    \begin{description}
+      \item[p1, p2] The two points to be subtracted. 
+    \end{description}
+  \item[Returns] The new point.
+\end{description}
+
+\subsubsection{operator*}
+Multiply a point by a scalar.
+\begin{description}
+  \item[Signature 1] friend Point operator*(const double s,const Point\& p).
+  \item[Signature 2] friend Point operator*(const Point\& p,const double s).
+  \item[Arguments]  to the overloaded '*' operator.
+     \begin{description}
+        \item[s] The scalar.
+        \item[p] The point.
+     \end{description} 
+  \item[Returns] The new point.
+\end{description}
+
+\subsubsection{operator||}
+Compute the distance between two points.
+\begin{description}
+  \item[Signature] friend double operator||(const Point\& p1,const Point\&
+  p2).
+  \item[Arguments]  to the overloaded '||' operator.
+     \begin{description}
+        \item[p1, p2] The two points the distance of which will be
+  computed.
+      \end{description}
+  \item[Returns] The distance between \tt p1 \rm and \tt p2\rm.
+\end{description}
+
+\subsubsection{operator==}
+Test for equality. Two points are equal if the values for the x, y and z 
+coordinates are the same.
+\begin{description}
+  \item[Signature]  friend inline bool operator==(const Point\& p1,
+  const Point\& p2).
+    \item[Arguments]  to the overloaded '==' operator.
+      \begin{description}
+        \item[p1, p2] The two points equality of which will be
+  tested.
+      \end{description}
+  \item[Returns] true if p1 and p2  are equal, otherwise false.
+\end{description}
+
+\subsection{Private Data Members}
+\begin{description} 
+  \item [x] The $x$-coordinate.
+  \item [y] The $y$-coordinate.
+  \item [z] The $z$-coordinate.
+\end{description}
+
+

@@ -1,0 +1,195 @@
+
+\section{ParametricCurve}
+
+The  class  \tt ParametricCurve  \rm  can  be  used to  define  simple
+functions.  A function $y = f(x)$ can  be described in an  ASCII file
+that  contains a  set  of $(x,y)$  pairs  defining the  values of  the
+function at given  points.  There is no limit to  the number of points
+that can be defined. At least two points must be defined.
+
+The $x$ values must be in ascending order and each $x$ value must have
+exactly one $y$ value.  Functions  having steps can be approximated by
+having two close enough $x$ values.  The closer the two $x$ values are
+the better the step in the function is described.
+
+The values of the function  between the defined pairs are interpolated
+with  a   straight  line.  Values   outside  the  defined   pairs  are
+extrapolated  with  a straight  line  defined  by  first two  or  last
+two $(x,y)$ pairs found in the definition file.
+
+\subsection{Using Parametric Curve}
+ 
+An example of a file and the parametric curve it defines 
+is in Figure~\ref{fig:curve}. Unfortunately the current implementation
+does not allow the user to include any comments in the file. 
+
+Assuming the name of the file is \tt curve.fn \rm the following 
+sequence of operations reads the file and evaluates the value of the
+curve at $x = 2.0$.
+\begin{tabbing}
+Tabbing \= Tabbing \= Tabbing \= Tab \= \kill
+\>\>\>\tt  ParametricCurve pc(``curve.fn''); \\
+\>\>\>\tt  if (pc.ok()) \\
+\>\>\>\>\tt pc(2.0);
+\end{tabbing}
+First, the parametric curve is created and then after checking
+if the program was able to read the file the value of the curve
+is evaluated. The classes with overloaded function operators are
+also called functors.
+
+\begin{figure}[h]
+\begin{center}
+\begin{picture}(330,250)
+%\graphpaper(0,0)(330,250)
+\put(0,0){
+  \begin{picture}(50,250)
+  \put(55,220) {File ``curve.fn''}
+
+  \put(50,160){\begin{tabular}{r r} 
+                    -7.0 & -3.0 \\ 
+                    -1.0 &  0.0 \\ 
+                     2.0 &  5.0 \\ 
+                     8.0 &  -3.0 \\
+                     10.0 &  3.0 \\
+                     13.0 &  4.0 \\
+  \end{tabular}
+  }
+  \end{picture}
+}
+
+\put(50,0){
+  \begin{picture}(100,250)
+    \put(100,220) {The Parametric Curve}
+
+    \put(60,70){\line(2,1){60}}
+    \put(120,100){\line(1,2){30}}
+    \put(150,160){\line(2,-3){60}}
+    \put(210,70){\line(1,3){20}}
+    \put(230,130){\line(3,1){30}}
+
+    \put(60,70) {\circle*{2}}
+    \put(120,100){\circle*{2}}
+    \put(150,160){\circle*{2}}
+    \put(210,70){\circle*{2}}
+    \put(230,130){\circle*{2}}
+    \put(260,140){\circle*{2}}
+
+    \put(20,100){\vector(1,0){250}}
+    \put(130,10){\vector(0,1){200}}
+
+    \put(60,60){$(-7.0,-3.0)$}
+    \put(120,90){$(-1.0,0.0)$}
+    \put(132,165){$(2.0,5.0)$}
+    \put(210,60){$(8.0,-3.0)$}
+    \put(190,135){$(10.0,3.0)$}
+    \put(245,145){$(13.0,4.0)$}
+  \end{picture}  
+}
+\end{picture}
+\caption{Defining a Parametric Curve}\label{fig:curve}
+\end{center}
+\end{figure}
+
+\subsection{The Class Declaration ParametricCurve}
+\verbinput{../include/ParametricCurve.h}
+
+\subsection{Public Methods}
+\subsubsection{ParametricCurve}
+The three overloaded constructors. The first (signature 1) does not define
+any parametric curve. Use method \tt install \rm  to define
+the curve. 
+ 
+\begin{description}
+    \item [Signature 1] ParametricCurve().
+    \item [Signature 2] ParametricCurve(const vector<double>\& v).
+    \item [Arguments] for the method.
+	\begin{description}
+           \item [v] The vector containing $(x,y)$ pairs for $y =
+    f(x)$. 
+        \end{description}
+     \item [Signature 3] ParametricCurve(const string\& file).
+    \item [Arguments] for the method.
+       \begin{description}
+           \item [file] The file containing $(x,y)$ pairs for $y =
+    f(x)$. 
+         \end{description} 
+    \item [Returns] Nothing.
+\end{description} 
+
+\subsubsection{operator()}
+Evaluate the value $y$ of the curve at the point $x$. 
+See the method \tt eval\rm.
+\begin{description}
+   \item [Signature] double  operator() (double x)const.
+   \item [Arguments] for the method.
+     \begin{description}
+        \item [x] The point $x$ where the value of the parametric curve 
+                  is to be evaluated.
+       \end{description}
+    \item [Returns] The value $y$ at the point $x$.
+\end{description} 
+
+\subsubsection{install}
+Install a parametric cure defined in the file \tt file\rm.
+ \begin{description}
+    \item [Signature] bool install(const string\& file).
+    \item [Arguments] for the method
+       \begin{description}
+         \item[file] The file containing  $(x,y)$ pairs for $y =
+    	f(x)$.
+        \end{description} 
+    \item [Returns] true if the parametric curve was properly defined,
+        	               false if not (see method \tt ok\rm).
+ \end{description} 
+
+
+\subsubsection{ok} 
+Checks if the parametric curve is properly defined. The curve is 
+properly defined if each $x$ value has exactly one $y$ value in the file and
+the $x$ values are strictly in ascending order.
+   \begin{description}
+    \item [Signature] bool ok().
+    \item [Returns] true if  the parametric curve properly defined,
+                       false if not. 
+   \end{description} 
+
+\subsubsection{eval}
+Evalute the value $y$  of the curve at the point $x$.
+\begin{description}  
+    \item [Signature] double eval(double x).
+    \item [Arguments] for the method.
+      \begin{description}
+        \item [x] The point $x$ where the value of the parametric curve 
+                  is to be evaluated.
+       \end{description}
+    \item [Returns] The value $y$ at the point $x$.
+\end{description} 
+
+\subsubsection{getFile}
+\begin{description}
+    \item [Signature] string  getFile().
+    \item [Returns] The file where the curve is defined.
+\end{description}
+
+\subsection{Private Methods}
+
+\subsubsection{read\_xy\_file}
+Read the file and create the internal representation of the parametric curve.
+ \begin{description}
+     \item [Signature] ParametricCurve\& read\_xy\_file(char*
+ file\_name).
+    \item [Arguments] for the method.
+      \begin{description}
+        \item [file] The file where the parametric curve is defined.
+       \end{description}
+    \item [Returns] The parametric curve itself.
+ \end{description} 
+
+\subsection{Private Data Members}
+\begin{description}
+ \item [file] The name of the file where the parametric curve
+                      is defined.
+ \item [v] Vector containg the internal representation of the
+                          parametric curve. 
+ \item [num\_of\_elements]  The length of the vector \tt v\rm.
+\end{description}
