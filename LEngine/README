@@ -1,0 +1,72 @@
+Typically in  your (main) program  you first include Lignum.h  for the
+core  model of  LIGNUM and  your refinement  of tree  segment  and bud.
+After that  include lengine.h  that declares necessary  (system) files
+for L-system  implementation. Finally include  LSystem.h that provides
+the application programming interface  for rewriting process.  If your
+program  contains  several species  include  LSystem.h  once for  each
+species wrapped in a namespace.
+
+In  your L-system  definition file  include first  lengine.h  and then
+lsystem.h  that implements  the  rewriting process.   After that  your
+L-system specification will  follow. If you are going  to have several
+species in your program  enclose your specification including the file
+lsystem.h in a namespace. Make  sure the namespace names for LSystem.h
+(interface) and for the L-system (definition) matches. See bearberry.L
+and pine9bp.L in lsys for details.
+
+To compile  your program each L-system  file is first  compiled to C++
+with l2c. Then  all source files are compiled  with C/C++ compiler and
+linked to a single  executable program. The necessary L-system program
+library is libL.a implementing e.g. so called turtle.
+
+NOTE FOR L-SYSTEM FILES (USER CAVEATS AND TODO)
+
+Currently you must define at  least one dummy rule for interpretation.
+See  bearberry.L and  pine9bp.L for  an example.   This is  a  ToDo to
+augment the  grammar for the l2c  compiler (in the yacc  file l2c.y in
+L2C)  so   that  the  interpretation  part  will   be  optional.   The
+interpretation is for example used to separate the L-system model from
+its graphics rendering but for  us LIGNUM is visualized instead so the
+interpretation is more or less unnecessary.
+
+Do not  use any L-language  keywords inside comments in  your L-system
+definition file.  The lexer part  of the compiler scans the L-file and
+assumes  C++ source  until a  keyword is  found. When  the  keyword is
+detected the token stream is  directed to the parser that compiles the
+L-language   to   C++   until   the   end  of   L-language   part   is
+found. Obviously, if this happens in a wrong place (for example inside
+a comment) the parser of l2c  will be confused. ToDo is to improve the
+lexer so  that the C/C++ comments  are stripped.  Second  option is to
+remove comments  from L-file with C++ preprocessor  before running the
+file  through  l2c  compiler.    Following  keywords  in  L  are  used
+(including colons): open, close, derivation length:, module, consider:
+ignore:, interpretation:, produce, Start:, StartEach:, EndEach:, End:.
+
+Your compiled L-system  library (see lsys as an  example) must contain
+exactly those L-systems  defintions you will need in  your program; no
+more and no less. Naturally you  can't miss any but you can't have any
+redundant  or spuorius  compiled definitions  either. This  is  due to
+global  variables and  functions  (to be  wrapped  within a  namespace
+naturally in your  program ) defined in LSystems.h;  see succtstrg and
+_Add(). This might  change in the future by  making succtstrg and _Add
+part of  LSystem class  and changing l2c  compiler but  current system
+fulfills current requirement specifications,  i.e. one must be able to
+define L-systems  for several tree  species and individual trees  in a
+single  program. If  you miss  some compiled  L-system  definition you
+program  will not  compile.  If you  have  spurious compiled  L-system
+definitions  you  will  get  an  error from  the  linker  for  missing
+defintion for _Add defined in LSystem.h
+
+Although F, Pith,  Turn, Roll and HRoll are  reserved module names for
+Turtle  interpretation  you must  declare  them  as  modules. This  is
+because you  can declare additional parameteres in  them and implement
+rewriting rules for  interpretation. Thus there is no  way to know the
+exact  definition   of  these  modules   and  what  they   exactly  do
+(rewrite). The name of the module tells how to move the turtle and the
+first parameter how much.
+
+Bison and Flex compiler examples
+
+flex  -Pl --noline  --outfile=lex_l.cpp l2c.l
+bison -d --no-lines --debug -p l -o l2c_tab.cpp l2c.y
+
