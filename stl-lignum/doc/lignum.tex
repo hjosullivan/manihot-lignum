@@ -1,0 +1,39 @@
+\documentclass[titlepage,a4paper]{report}
+
+\usepackage{amsmath}
+\usepackage{program}
+%\usepackage{t1enc,epsfig}
+
+\usepackage{subfigure,epic,epsfig}
+\usepackage{graphpap}
+
+\input{lignumdef}
+
+\title{A Functional Structural Tree Model \\ \lignum \\ 
+       User's Guide \& Reference Manual \\ Draft}
+
+\author{Jari Perttunen}
+
+\newtheorem{definition}{Definition}
+
+\begin{document}
+
+
+\maketitle
+
+\tableofcontents
+
+\input{Intro}
+\input{3DTrees}
+\input{PG}
+\input{UserGuide}
+\input{Start}
+\input{Algorithms}
+\input{LignumClasses}
+\input{Units}
+
+%References at the end
+\bibliography{references/em98,references/text-books}
+\bibliographystyle{plain}
+\end{document}
+
