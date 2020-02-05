@@ -4,6 +4,16 @@ manihot-lignum is a version of the LIGNUM model specifically for modelling *Mani
 
 ## Usage
 
+### Compile Lignum Workbench
+
+First compile the Lignum Workbench app `LignumWb.app` for easy visualisation of your tree.
+
+```
+$ cd qt-workbench
+$ qmake qt-opengl.pro
+$ make
+$ open LignumWb.app
+```
 Basic command line usage **after compilation**.
 
 `$ ./manihot -iter [number of iterations] -r [random number generator] -load [load number] -model [model number] -x [x coordinate] -y [y coordinate] -L [l-system] -xml [output xml file]`
