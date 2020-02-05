@@ -12,6 +12,8 @@ Run ./manihot with the arguments to specify model and output resulting xml file 
 
 The resulting tree can be visualised using qt-workbench.
 
+run ` make distclean` to remove previous compilations.
+
 ## Options
 
 - -iter: Number of L-system iterations. I.e. branching.
