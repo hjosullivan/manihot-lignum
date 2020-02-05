@@ -1,0 +1,71 @@
+#ifndef SUGAR_MAPLE_H
+#define SUGAR_MAPLE_H
+
+#include <Lignum.h>
+#include <BMComponent.h>
+class SugarMapleBud;
+class SugarMapleSegment;
+class BMSugarMapleBud;
+class BMSugarMapleSegment;
+
+//Sugar maple tree
+class SugarMapleTree: public Tree<SugarMapleSegment,SugarMapleBud>{
+ public:
+  SugarMapleTree(const Point& p, const PositionVector d)
+    :Tree<SugarMapleSegment,SugarMapleBud>(p,d){}
+};
+
+class BMSugarMapleTree: public Tree<BMSugarMapleSegment,BMSugarMapleBud>{
+ public:
+  BMSugarMapleTree(const Point& p, const PositionVector d)
+    :Tree<BMSugarMapleSegment,BMSugarMapleBud>(p,d){}
+};
+
+//Sugar maple segment
+class SugarMapleSegment:
+  public HwTreeSegment<SugarMapleSegment,SugarMapleBud,Ellipse>{
+ public:
+  //Constructor  for Sugar  maple  segment. The  argument  list is  as
+  //assumed  by L-system. If  you need  additional arguments  add them
+  //after the last one (the tree) and provide default values
+  SugarMapleSegment(const Point& p,const PositionVector& d,const LGMdouble go,
+		    const METER l,const METER r,const METER rn,
+		    Tree<SugarMapleSegment,SugarMapleBud>* t)
+    :HwTreeSegment<SugarMapleSegment,SugarMapleBud,Ellipse>(p,d,go,l,r,rn,t){}
+};
+
+class BMSugarMapleSegment:
+  public HwTreeSegment<BMSugarMapleSegment,BMSugarMapleBud,Ellipse>,public BMComponent{
+public:
+  //Constructor  for Sugar  maple  segment. The  argument  list is  as
+  //assumed  by L-system. If  you need  additional arguments  add them
+  //after the last one (the tree) and provide default values
+  BMSugarMapleSegment(const Point& p,const PositionVector& d,const LGMdouble go,
+		      const METER l,const METER r,const METER rn,
+		      Tree<BMSugarMapleSegment,BMSugarMapleBud>* t)
+    :HwTreeSegment<BMSugarMapleSegment,BMSugarMapleBud,Ellipse>(p,d,go,l,r,rn,t),
+     BMComponent(r){}
+};
+
+class BMSugarMapleBud: public Bud<BMSugarMapleSegment,BMSugarMapleBud>{
+ public:
+  //Constructor for Sugar maple bud.   The argument list is as assumed
+  //by L-system. If  you need additional arguments add  them after the
+  //last one (the tree) and provide default values
+  BMSugarMapleBud(const Point& p,const PositionVector& d,const LGMdouble omega, 
+		Tree<BMSugarMapleSegment,BMSugarMapleBud>* tree)
+    :Bud<BMSugarMapleSegment,BMSugarMapleBud>(p,d,omega,tree){}
+};
+
+//Sugar maple bud
+class SugarMapleBud: public Bud<SugarMapleSegment,SugarMapleBud>{
+ public:
+  //Constructor for Sugar maple bud.   The argument list is as assumed
+  //by L-system. If  you need additional arguments add  them after the
+  //last one (the tree) and provide default values
+  SugarMapleBud(const Point& p,const PositionVector& d,const LGMdouble omega, 
+		Tree<SugarMapleSegment,SugarMapleBud>* tree)
+    :Bud<SugarMapleSegment,SugarMapleBud>(p,d,omega,tree){}
+};
+
+#endif

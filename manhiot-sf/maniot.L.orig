@@ -1,0 +1,140 @@
+//Your  L-system will be similar to this. See 
+//LEngine README for user caveats, e.g. please do not
+//use C++ keywords in comments.
+#include <iostream>
+using namespace std;
+
+#include <mathsym.h>
+#include <ParametricCurve.h>
+#include <Uniform.h>
+using namespace cxxadt;
+
+#include <LGMUnits.h>
+using namespace Lignum;
+#include <Maniot.h>
+//First include lengine.h file for some necessary 
+//declarations and definitions 
+#include <lengine.h>
+//Uniform distribution random number generator 
+
+extern int init;
+//Then wrap your L-system into a "namespace" so that you
+//can have several tree sepecies in a program 
+open Maniot;
+
+//lsys.h impelemnts the rewriting
+#include <lsys.h>
+
+Uniform u;
+//Uniform random number between min and max
+inline double ba(double min, double max, Uniform& u)
+{
+  return min + u(1)*(max-min);
+}
+
+inline double sign(Uniform& u)
+{
+  double r = u(1);
+  if (r >= 0.5)
+    return 1.0;
+  else
+    return -1.0;
+}
+
+//Branching angles in the main branch
+const double MIN_PITCH = 40.0*PI_VALUE/180.0;
+const double MAX_PITCH = 80.0*PI_VALUE/180.0;
+const double MIN_TURN = 30.0*PI_VALUE/180.0;
+const double MAX_TURN = 60.0*PI_VALUE/180.0;
+const double MIN_FORK = 5.0*PI_VALUE/180.0;
+const double MAX_FORK = 10.0*PI_VALUE/180.0;
+const double MIN_FORK_AU2 = 0.0*PI_VALUE/180.0;
+const double MAX_FORK_AU2 = 5.0*PI_VALUE/180.0;
+const double MIN_PIVOT = 0.0*PI_VALUE/180.0;
+const double MAX_PIVOT = 5.0*PI_VALUE/180.0;
+const double REITERATION_AGE = 10.0;
+const double AU2_AGE = 7.0;
+const double A2_MORT = 0.45;
+const double A3_MORT = 0.45;
+const double P_REITER = 0.1;
+const double P_AU2 = 0.3;
+//Segment default dimenstions
+const double LSEG = 0.40;
+const double LA2 = 0.20;
+const double LA3 = 0.10;
+const double RA1 = 0.004;
+const double RAU2 = 0.002;
+const double RA2 = 0.002;
+const double RA3 = 0.002;
+const double GA1 = 0.005;
+const double GA2 = 0.003;
+const double GA3 = 0.002;
+//Axis types
+const double A1 = 1.0;
+const double A2 = 2.0;
+const double A3 = 3.0;
+const double A4 = 4.0;
+const double AU2 = 4.0;
+const double THICK = 0.01;
+//The declare the modules your need 
+//Fd(length,radius,radius_top,axis_type)
+module Fd(double, double,double,double);
+//Status = ALIVE,DEAD 
+//B: Bud(AxisType,Age,PhysAge,Status)
+module B(double,double,double,double);
+module Pitch(double);
+module Turn(double);
+module Roll(double);
+module HRoll();
+module Split();
+module D(double,double);
+ignore: Roll Pitch Turn HRoll;
+
+//Define the Start corresponding to the axiom
+Start:
+{
+  cout << init << endl;
+  u.init(init);
+  double pitch1 = ba(MIN_PITCH,MAX_PITCH,u);
+  double pitch2 = ba(MIN_PITCH,MAX_PITCH,u);
+  produce Fd(LSEG,RA1,RA1,A1) SB() Pitch(pitch1)  B(A2,1,1,ALIVE)EB() 
+                              SB() Roll(PI_VALUE) Pitch(pitch2)  B(A2,1,1,ALIVE)EB()
+                                   Roll(PI_VALUE/2.0) B(A1,1,1,ALIVE);
+}
+
+
+B(axis_type,age,phys_age,status):
+{
+  double ran = u(1);
+ 
+}
+
+//Left hand and right hand context or B
+//D(THICK,c) < B(axis_type,age,phys_age,status) > Fd(l1,r1,rtop1,axis_type1):
+//{
+//}
+
+//Left hand context for Fd
+//D(THICK,c) < Fd(l1,r1,rtop1,axis_type1):
+//{  if (THICK > 0.0)
+//     produce Fd(l1,THICK,THICK,axis_type1)D(THICK/2.0,1.0);
+//}
+
+//Right hand context for D
+//D(THICK,c) > Fd(l1,r1,rtop1,axis_type1):
+//{  if (THICK > 0.0)
+//     produce Fd(l1,THICK,THICK,axis_type1)D(THICK/2.0,1.0);
+//}
+
+//This is a ToDO for Jari: interpretation typically
+//defines the graphical visualization of symbols. But
+//we visualize LIGNUM and thus this is practically 
+//unnecessary for us. However, "lc2" cannot compile
+//L-files unless you have one  interpretation   
+
+interpretation:
+
+
+
+//Finally, "close" the "namespace"
+close Maniot;
