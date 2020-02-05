@@ -6,4 +6,19 @@ manihot-lignum is a version of the LIGNUM model specifically for modelling *Mani
 
 Basic command line usage **after compilation**.
 
-`./maniot -iter [number of iterations] -r [random number generator] -load [load number] -model [model number] -x [x coordinate] -y [y coordinate] -L [l-system] -xml [output xml file]`
+`$ ./manihot -iter [number of iterations] -r [random number generator] -load [load number] -model [model number] -x [x coordinate] -y [y coordinate] -L [l-system] -xml [output xml file]`
+
+Run ./manihot with the arguments to specify model and output resulting xml file of tree architecture.
+
+The resulting tree can be visualised using qt-workbench.
+
+## Options
+
+- -iter: Number of L-system iterations. I.e. branching.
+- -r: Randomise branching for a more "natural" look.
+- -load: Optional. Additional weight from snow/ice etc.
+- -model: Type of model to use.
+- -x: x coordinate.
+- -y: y coordinate.
+- -L: Specify L system (e.g. maniot.L)
+- -xml: Name of output xml file.
