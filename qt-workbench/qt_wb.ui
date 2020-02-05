@@ -1,0 +1,272 @@
+<ui version="4.0" >
+ <author></author>
+ <comment></comment>
+ <exportmacro></exportmacro>
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1022</width>
+    <height>661</height>
+   </rect>
+  </property>
+  <property name="mouseTracking" >
+   <bool>false</bool>
+  </property>
+  <property name="windowTitle" >
+   <string>Lignum Workbench</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QHBoxLayout" >
+    <property name="margin" >
+     <number>9</number>
+    </property>
+    <property name="spacing" >
+     <number>6</number>
+    </property>
+    <item>
+     <layout class="QHBoxLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item>
+       <layout class="QVBoxLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <item>
+         <widget class="QWidget" name="widget" >
+          <layout class="QHBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <widget class="QWidget" name="widget" >
+             <layout class="QVBoxLayout" >
+              <property name="margin" >
+               <number>0</number>
+              </property>
+              <property name="spacing" >
+               <number>6</number>
+              </property>
+              <item>
+               <widget class="GLDrawer" name="gldrawer" >
+                <property name="sizePolicy" >
+                 <sizepolicy>
+                  <hsizetype>7</hsizetype>
+                  <vsizetype>7</vsizetype>
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="acceptDrops" >
+                 <bool>true</bool>
+                </property>
+                <property name="toolTip" >
+                 <string>OpenGL visualization for Lignum</string>
+                </property>
+                <property name="whatsThis" >
+                 <string> Visualization for Lignum</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" >
+          <property name="margin" >
+           <number>0</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1022</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuValikko" >
+    <property name="title" >
+     <string>valikko</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuTools" >
+    <property name="title" >
+     <string>Tools</string>
+    </property>
+    <addaction name="actionConsole" />
+    <addaction name="actionXML_Viewer" />
+    <addaction name="actionFunction_editor" />
+   </widget>
+   <widget class="QMenu" name="menuOptions" >
+    <property name="title" >
+     <string>Options</string>
+    </property>
+    <addaction name="actionVisualization_settings" />
+    <addaction name="actionWorking_directory" />
+   </widget>
+   <widget class="QMenu" name="menuFile" >
+    <property name="title" >
+     <string>File</string>
+    </property>
+    <addaction name="actionLoad_tree" />
+    <addaction name="actionQuit" />
+   </widget>
+   <widget class="QMenu" name="menuHElp" >
+    <property name="title" >
+     <string>Help</string>
+    </property>
+    <addaction name="actionHelp" />
+   </widget>
+   <addaction name="menuFile" />
+   <addaction name="menuOptions" />
+   <addaction name="menuTools" />
+   <addaction name="menuHElp" />
+  </widget>
+  <widget class="QStatusBar" name="statusbar" />
+  <widget class="QToolBar" name="toolBar" >
+   <property name="orientation" >
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <attribute name="toolBarArea" >
+    <number>4</number>
+   </attribute>
+   <addaction name="actionOrbit" />
+   <addaction name="actionMove_center" />
+   <addaction name="actionFree_roam" />
+   <addaction name="separator" />
+   <addaction name="actionSwitch_materials" />
+  </widget>
+  <action name="actionQuit" >
+   <property name="icon" >
+    <iconset>../../../Qt-4.1.4/bin/maple_texture.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionVisualization_settings" >
+   <property name="text" >
+    <string>Visualization settings...</string>
+   </property>
+  </action>
+  <action name="actionFree_roam" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Free roam</string>
+   </property>
+  </action>
+  <action name="actionOrbit" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Orbit</string>
+   </property>
+  </action>
+  <action name="actionMove_center" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Move center</string>
+   </property>
+  </action>
+  <action name="actionWorking_directory" >
+   <property name="text" >
+    <string>Change working directory...</string>
+   </property>
+  </action>
+  <action name="actionFunction_editor" >
+   <property name="text" >
+    <string>Function editor...</string>
+   </property>
+  </action>
+  <action name="actionXML_Viewer" >
+   <property name="text" >
+    <string>XML Viewer...</string>
+   </property>
+  </action>
+  <action name="actionSwitch_materials" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Show object types</string>
+   </property>
+   <property name="iconText" >
+    <string>Show object types</string>
+   </property>
+   <property name="toolTip" >
+    <string>Shows the types of segments and buds.</string>
+   </property>
+  </action>
+  <action name="actionConsole" >
+   <property name="text" >
+    <string>Console...</string>
+   </property>
+  </action>
+  <action name="actionLoad_tree" >
+   <property name="text" >
+    <string>Load tree...</string>
+   </property>
+   <property name="toolTip" >
+    <string>Loads a tree directly to visualization</string>
+   </property>
+  </action>
+  <action name="actionHelp" >
+   <property name="text" >
+    <string>Help...</string>
+   </property>
+  </action>
+ </widget>
+ <pixmapfunction></pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>GLDrawer</class>
+   <extends>QWidget</extends>
+   <header>GLDrawer.h</header>
+   <container>0</container>
+   <pixmap></pixmap>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="resources.qrc" />
+ </resources>
+ <connections/>
+</ui>
