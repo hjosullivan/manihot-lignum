@@ -43,11 +43,11 @@ inline double sign(Uniform& u)
 
 //Branching angles in the main branch
 const double MIN_PITCH = 40.0*PI_VALUE/180.0;
-const double MAX_PITCH = 80.0*PI_VALUE/180.0;
-//const double MIN_TURN = 30.0*PI_VALUE/180.0;
-//const double MAX_TURN = 60.0*PI_VALUE/180.0;
-//const double MIN_FORK = 5.0*PI_VALUE/180.0;
-//const double MAX_FORK = 10.0*PI_VALUE/180.0;
+const double MAX_PITCH = 50.0*PI_VALUE/180.0;
+const double MIN_TURN = 30.0*PI_VALUE/180.0;
+const double MAX_TURN = 60.0*PI_VALUE/180.0;
+const double MIN_FORK = 5.0*PI_VALUE/180.0;
+const double MAX_FORK = 10.0*PI_VALUE/180.0;
 //const double MIN_FORK_AU2 = 0.0*PI_VALUE/180.0;
 //const double MAX_FORK_AU2 = 5.0*PI_VALUE/180.0;
 //const double MIN_PIVOT = 0.0*PI_VALUE/180.0;
@@ -60,8 +60,8 @@ const double MAX_PITCH = 80.0*PI_VALUE/180.0;
 //const double P_AU2 = 0.3;
 //Segment default dimenstions
 const double LSEG = 0.40;
-//const double LA2 = 0.20;
-//const double LA3 = 0.10;
+const double LA2 = 0.20;
+const double LA3 = 0.10;
 const double RA1 = 0.004;
 //const double RAU2 = 0.002;
 //const double RA2 = 0.002;
@@ -72,16 +72,16 @@ const double RA1 = 0.004;
 //Axis types
 const double A1 = 1.0;
 const double A2 = 2.0;
-//const double A3 = 3.0;
-//const double A4 = 4.0;
+const double A3 = 3.0;
+const double A4 = 4.0;
 //const double AU2 = 4.0;
-//const double THICK = 0.01;
+const double THICK = 0.01;
 //The declare the modules your need 
 //Fd(length,radius,radius_top,axis_type)
 module Fd(double, double,double,double);
 //Status = ALIVE,DEAD 
 //B: Bud(AxisType,Age,PhysAge,Status)
-module B(double,double,double,double);
+module B(double,double,double,double,double);
 module Pitch(double);
 module Turn(double);
 module Roll(double);
@@ -97,25 +97,50 @@ Start:
   u.init(init);
   double pitch1 = ba(MIN_PITCH,MAX_PITCH,u);
   double pitch2 = ba(MIN_PITCH,MAX_PITCH,u);
-  produce Fd(LSEG,RA1,RA1,A1) SB() Pitch(pitch1)  B(A2,1,1,ALIVE)EB() 
-                              SB() Roll(PI_VALUE) Pitch(pitch2)  B(A2,1,1,ALIVE)EB()
-                                   Roll(PI_VALUE/2.0) B(A1,1,1,ALIVE);
+  produce Fd(LSEG,RA1,RA1,A1) SB() Pitch(pitch1)  B(A2,1,1,ALIVE,0)EB() 
+                              SB() Roll(PI_VALUE) Pitch(pitch2)  B(A2,1,1,ALIVE,0)EB()
+                                   Roll(PI_VALUE/2.0) B(A1,1,1,DEAD,0);
 }
 
-
-B(axis_type,age,phys_age,status):
+//Bud produces tree segments and lateral buds
+B(axis_type,age,phys_age,status,pitch_angle):
 {
   double ran = u(1);
   double pitch1 = ba(MIN_PITCH,MAX_PITCH,u);
   double pitch2 = ba(MIN_PITCH,MAX_PITCH,u);
-  produce Fd(LSEG,RA1,RA1,A1) SB() Pitch(pitch1)  B(A2,1,1,ALIVE)EB() 
-                              SB() Roll(PI_VALUE) Pitch(pitch2)  B(A2,1,1,ALIVE)EB()
-                                   Roll(PI_VALUE/2.0) B(A1,1,1,DEAD);
+  if (status==ALIVE && axis_type == A1){
+      produce Fd(LSEG,RA1,RA1,A1) SB() Pitch(pitch1)  B(A2,1,1,ALIVE,pitch_angle)EB() 
+                                  SB() Roll(PI_VALUE) Pitch(pitch2)  B(A2,1,1,ALIVE,pitch_angle)EB()
+                    Roll(PI_VALUE/2.0) B(A1,1,1,DEAD,pitch_angle);
+   }
+   else if (status == ALIVE && axis_type == A2){
+   	double max_pitch_angle = MAX_FORK;
+        if (pitch_angle >= 85.0*PI_VALUE/180.0){
+            max_pitch_angle = 0.0;
+	}
+        double new_pitch_angle = pitch_angle + max_pitch_angle;
+   	produce Fd(LA2, RA1, RA1, axis_type) SB() Turn(MIN_TURN) Pitch(max_pitch_angle)B(A3,1,1,ALIVE,new_pitch_angle)EB()
+			      	       SB() Turn(-MIN_TURN) Pitch(-max_pitch_angle) B(A3,1,1,ALIVE,new_pitch_angle)EB()
+				       B(axis_type,1,1,DEAD,new_pitch_angle);
+   }
+   else if (status == ALIVE && axis_type > A2){
+   	double max_pitch_angle = MAX_FORK;
+	if (pitch_angle >= 85.0*PI_VALUE/180.0){
+	   max_pitch_angle = 0.0;
+	}
+	double new_pitch_angle = pitch_angle + max_pitch_angle;
+   	produce Fd(LA3, RA1, RA1, axis_type) SB() Turn(MIN_TURN) Pitch(-max_pitch_angle) B(A4,1,1,ALIVE,new_pitch_angle) EB()
+   	   	   	     		SB() Turn(-MIN_TURN) Pitch(-max_pitch_angle) B(A4,1,1,ALIVE,new_pitch_angle) EB()
+					B(axis_type,1,1,DEAD,new_pitch_angle);
+   }
+   else{
+   produce B(axis_type,age,phys_age,status,pitch_angle);
+   }
 }
 
 
 //Left hand and right hand context or Bud
-D(THICK,c) < B(axis_type,age,phys_age,status) > Fd(l1,r1,rtop1,axis_type1):
+D(THICK,c) < B(axis_type,age,phys_age,status,pitch_angle) > Fd(l1,r1,rtop1,axis_type1):
 {
 if (THICK > 0.0)
 produce Fd(l1,THICK,THICK,axis_type1)D(THICK/2.0,1.0);
