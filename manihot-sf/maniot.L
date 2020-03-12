@@ -42,12 +42,12 @@ inline double sign(Uniform& u)
 }
 
 //Branching angles in the main branch
-const double MIN_PITCH = 40.0*PI_VALUE/180.0;
-const double MAX_PITCH = 50.0*PI_VALUE/180.0;
+const double MIN_PITCH = 50.0*PI_VALUE/180.0;
+const double MAX_PITCH = 70.0*PI_VALUE/180.0;
 const double MIN_TURN = 30.0*PI_VALUE/180.0;
-const double MAX_TURN = 60.0*PI_VALUE/180.0;
+const double MAX_TURN = 70.0*PI_VALUE/180.0;
 const double MIN_FORK = 5.0*PI_VALUE/180.0;
-const double MAX_FORK = 10.0*PI_VALUE/180.0;
+const double MAX_FORK = 25.0*PI_VALUE/180.0;
 //const double MIN_FORK_AU2 = 0.0*PI_VALUE/180.0;
 //const double MAX_FORK_AU2 = 5.0*PI_VALUE/180.0;
 //const double MIN_PIVOT = 0.0*PI_VALUE/180.0;
@@ -58,25 +58,31 @@ const double MAX_FORK = 10.0*PI_VALUE/180.0;
 //const double A3_MORT = 0.45;
 //const double P_REITER = 0.1;
 //const double P_AU2 = 0.3;
+
 //Segment default dimenstions
 const double LSEG = 0.40;
 const double LA2 = 0.20;
 const double LA3 = 0.10;
+const double LA4 = 0.05;
 const double RA1 = 0.004;
 //const double RAU2 = 0.002;
-//const double RA2 = 0.002;
-//const double RA3 = 0.002;
+const double RA2 = 0.002;
+const double RA3 = 0.001;
+const double RA4 = 0.0005;
 //const double GA1 = 0.005;
 //const double GA2 = 0.003;
 //const double GA3 = 0.002;
+
 //Axis types
 const double A1 = 1.0;
 const double A2 = 2.0;
 const double A3 = 3.0;
 const double A4 = 4.0;
+const double A5 = 5.0;
 //const double AU2 = 4.0;
 const double THICK = 0.01;
-//The declare the modules your need 
+
+//Then declare the modules your need 
 //Fd(length,radius,radius_top,axis_type)
 module Fd(double, double,double,double);
 //Status = ALIVE,DEAD 
@@ -97,9 +103,9 @@ Start:
   u.init(init);
   double pitch1 = ba(MIN_PITCH,MAX_PITCH,u);
   double pitch2 = ba(MIN_PITCH,MAX_PITCH,u);
-  produce Fd(LSEG,RA1,RA1,A1) SB() Pitch(pitch1)  B(A2,1,1,ALIVE,0)EB() 
-                              SB() Roll(PI_VALUE) Pitch(pitch2)  B(A2,1,1,ALIVE,0)EB()
-                                   Roll(PI_VALUE/2.0) B(A1,1,1,DEAD,0);
+  produce Fd(LSEG,RA1,RA1,A1) SB() Pitch(pitch1)  B(A2,1,1,ALIVE,0)EB() //Second order branch
+                              SB() Roll(PI_VALUE) Pitch(pitch2)  B(A2,1,1,ALIVE,0)EB() //Second order branch
+                                   Roll(PI_VALUE/2.0) B(A1,1,1,DEAD,0); //Kill terminating bud
 }
 
 //Bud produces tree segments and lateral buds
@@ -108,30 +114,55 @@ B(axis_type,age,phys_age,status,pitch_angle):
   double ran = u(1);
   double pitch1 = ba(MIN_PITCH,MAX_PITCH,u);
   double pitch2 = ba(MIN_PITCH,MAX_PITCH,u);
+  //Main axis
   if (status==ALIVE && axis_type == A1){
       produce Fd(LSEG,RA1,RA1,A1) SB() Pitch(pitch1)  B(A2,1,1,ALIVE,pitch_angle)EB() 
                                   SB() Roll(PI_VALUE) Pitch(pitch2)  B(A2,1,1,ALIVE,pitch_angle)EB()
                     Roll(PI_VALUE/2.0) B(A1,1,1,DEAD,pitch_angle);
    }
+   //Second order branches
    else if (status == ALIVE && axis_type == A2){
+   	//Define a maximum pitch angle so branches cannot grow inwards 
    	double max_pitch_angle = MAX_FORK;
+	//Randomise turning
+	double turn1 = ba(MIN_TURN, MAX_TURN,u);
+	double turn2 = ba(MIN_TURN, MAX_TURN,u);
+	//Do not allow the maximum angle to exceed 85
         if (pitch_angle >= 85.0*PI_VALUE/180.0){
             max_pitch_angle = 0.0;
 	}
         double new_pitch_angle = pitch_angle + max_pitch_angle;
-   	produce Fd(LA2, RA1, RA1, axis_type) SB() Turn(MIN_TURN) Pitch(max_pitch_angle)B(A3,1,1,ALIVE,new_pitch_angle)EB()
-			      	       SB() Turn(-MIN_TURN) Pitch(-max_pitch_angle) B(A3,1,1,ALIVE,new_pitch_angle)EB()
+   	produce Fd(LA2, RA1, RA2, axis_type) SB() Turn(turn1) Pitch(max_pitch_angle)B(A3,1,1,ALIVE,new_pitch_angle)EB()
+			      	       SB() Turn(-turn2) Pitch(-max_pitch_angle) B(A3,1,1,ALIVE,new_pitch_angle)EB()
 				       B(axis_type,1,1,DEAD,new_pitch_angle);
    }
-   else if (status == ALIVE && axis_type > A2){
+   //Third order branches
+   else if (status == ALIVE && axis_type == A3){
    	double max_pitch_angle = MAX_FORK;
+	// Randomise turning
+	double turn1 = ba(MIN_TURN, MAX_TURN, u);
+	double turn2 = ba(MIN_TURN, MAX_TURN, u);
 	if (pitch_angle >= 85.0*PI_VALUE/180.0){
 	   max_pitch_angle = 0.0;
 	}
 	double new_pitch_angle = pitch_angle + max_pitch_angle;
-   	produce Fd(LA3, RA1, RA1, axis_type) SB() Turn(MIN_TURN) Pitch(-max_pitch_angle) B(A4,1,1,ALIVE,new_pitch_angle) EB()
-   	   	   	     		SB() Turn(-MIN_TURN) Pitch(-max_pitch_angle) B(A4,1,1,ALIVE,new_pitch_angle) EB()
+   	produce Fd(LA3, RA2, RA3, axis_type) SB() Turn(turn1) Pitch(max_pitch_angle) B(A4,1,1,ALIVE,new_pitch_angle) EB()
+   	   	   	     		SB() Turn(-turn2) Pitch(-max_pitch_angle) B(A4,1,1,ALIVE,new_pitch_angle) EB()
 					B(axis_type,1,1,DEAD,new_pitch_angle);
+   }
+   //Fourth order branches or greater
+   else if (status == ALIVE && axis_type > A4){
+   	double max_pitch_angle = MAX_FORK;
+   	//Randomise turning
+   	double turn1 = ba(MIN_TURN, MAX_TURN, u);
+   	double turn2 = ba(MIN_TURN, MAX_TURN, u);
+  	 if (pitch_angle >= 85.0*PI_VALUE/180.0){
+     	     max_pitch_angle = 0.0;
+  	  }
+  	  double new_pitch_angle = pitch_angle + max_pitch_angle;
+  	  produce Fd(LA4, RA3, RA4, axis_type) SB() Turn(turn1) Pitch(max_pitch_angle) B(A5,1,1,ALIVE,new_pitch_angle) EB()
+   	   	   	     	SB() Turn(-turn2) Pitch(-max_pitch_angle) B(A5,1,1,ALIVE,new_pitch_angle) EB()
+				B(axis_type,1,1,DEAD,new_pitch_angle);
    }
    else{
    produce B(axis_type,age,phys_age,status,pitch_angle);

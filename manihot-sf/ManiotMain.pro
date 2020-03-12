@@ -58,4 +58,6 @@ win32:CONFIG+=console
 # Input
 HEADERS += include/Maniot.h include/DataFile.h include/BMComponent.h \
            include/BMFunctors.h
-SOURCES += main.cc 
+SOURCES += main.cc \
+          src/ManiotSegmentMetabolism.cc \
+          src/ManiotSegmentNewGrowth.cc

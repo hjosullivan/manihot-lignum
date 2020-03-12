@@ -93,12 +93,12 @@ int main(int argc, char** argv)
     init = -atoi(argument.c_str());
   argument.clear();
   
-  BMManiotTree maniot1(Point(x,y,0),PositionVector(0,0,1.0));  
-  BMManiotTree maniot3(Point(x,y,0),PositionVector(0,0,1.0));  
+  ManiotTree maniot1(Point(x,y,0),PositionVector(0,0,1.0));  
+  ManiotTree maniot3(Point(x,y,0),PositionVector(0,0,1.0));  
 
-  BL1::LSystem<BMManiotSegment,BMManiotBud> maniotl1;
-  BL2::LSystem<BMManiotSegment,BMManiotBud> maniotl2;
-  Maniot::LSystem<BMManiotSegment,BMManiotBud> maniotl3;
+  BL1::LSystem<ManiotSegment,ManiotBud> maniotl1;
+  BL2::LSystem<ManiotSegment,ManiotBud> maniotl2;
+  Maniot::LSystem<ManiotSegment,ManiotBud> maniotl3;
   SetValue(maniot3,LGPrhoW,676.0);
   //Expand axiom, first initial structure
   maniotl1.start();
@@ -122,8 +122,13 @@ int main(int argc, char** argv)
   //Clean up.
   maniotl1.end();
   maniotl2.end();
+  // Add leaves
+  vector<PositionVector> pv;
+  AccumulateDown(maniot3, pv, AppendSequence<vector<PositionVector> >(),
+		 CreateManiotLeaves(0.1, 0.1));
+  
   if (!file.empty()){
-    XMLDomTreeWriter<BMManiotSegment, BMManiotBud> writer;
+    XMLDomTreeWriter<ManiotSegment, ManiotBud> writer;
     if (L < 3)
       writer.writeTreeToXML(maniot1, file);
     else
